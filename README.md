@@ -7,3 +7,12 @@ dashboards. They are abale to borrow and return the books.
 library_management.sql file should be downloaded and imported in any tool like wamp/xampp before launching the project to avoid errors while loading the system.
 
 Steps for installation
+
+1. Download the folder on your desktop and rename it to library management or any name you prefer.
+2. Launch your wampserver or Xampp tool
+3. If you are using Wampserver then go to your primary partition and follow this path "C:\wamp64\www\Library management" to store
+4. If you are using Xampp store your folder using this path "C:\xampp\htdocs\Library management"
+5. Make sure your tools are running and then got phpmyAdmin and in the interface create a database and name it "library_management"
+6. Then select import to import the sql file that came with the downloaded folder.
+7. launch the project by going to the browser and tyoe localhost/library management
+8. you are go to go
