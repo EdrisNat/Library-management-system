@@ -102,6 +102,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register'])) {
             border-radius: 10px;
             box-shadow: 0 0 15px rgba(0,0,0,0.1);
         }
+        .text-sub {
+            color: grey; 
+            font-size: 23px;
+            margin-left: 400px;
+            margin-top: 0px;
+            margin-bottom: 30px;
+        }
     </style>
 </head>
 <body>
@@ -109,7 +116,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register'])) {
     
     <div class="container">
         <h1 class="text-center mb-4">Library Management System</h1>
-        
+        <h3 class="text-sub">By Group A (CAT2 ASSIGNMENT) </h3>
         <div class="row justify-content-center">
             <!-- Login Form -->
             <div class="col-md-5 mb-4">
