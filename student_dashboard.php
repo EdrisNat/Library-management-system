@@ -2,7 +2,7 @@
 require_once 'config.php';
 
 // Check if student is logged in
-if (!isset($_SESSION['user_id'])) {
+if (!isset($_SESSION['student_id'])) {
     header("location: index.php");
     exit;
 }
@@ -36,12 +36,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['borrow_book'])) {
                 $update_stmt->execute();
                 
                 // Record borrowing
-                $borrow_sql = "INSERT INTO borrow_history (book_id, user_id, borrow_date) VALUES (?, ?, NOW())";
+                $borrow_sql = "INSERT INTO borrow_history (book_id, student_id, borrow_date) VALUES (?, ?, NOW())";
                 $borrow_stmt = $conn->prepare($borrow_sql);
                 if ($borrow_stmt === false) {
                     throw new Exception("Failed to prepare borrow statement: " . $conn->error);
                 }
-                $borrow_stmt->bind_param("ss", $book_id, $_SESSION['user_id']);
+                $borrow_stmt->bind_param("ss", $book_id, $_SESSION['student_id']);
                 $borrow_stmt->execute();
                 
                 $conn->commit();
@@ -75,12 +75,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['return_book'])) {
         $update_stmt->execute();
         
         // Update return date
-        $return_sql = "UPDATE borrow_history SET return_date = NOW() WHERE book_id = ? AND user_id = ? AND return_date IS NULL";
+        $return_sql = "UPDATE borrow_history SET return_date = NOW() WHERE book_id = ? AND student_id = ? AND return_date IS NULL";
         $return_stmt = $conn->prepare($return_sql);
         if ($return_stmt === false) {
             throw new Exception("Failed to prepare return statement: " . $conn->error);
         }
-        $return_stmt->bind_param("ss", $borrow_id, $_SESSION['user_id']);
+        $return_stmt->bind_param("ss", $borrow_id, $_SESSION['student_id']);
         $return_stmt->execute();
         
         $conn->commit();
@@ -121,13 +121,13 @@ if (isset($books_stmt) && $books_stmt !== false) {
 $borrowed_sql = "SELECT bh.*, b.title, b.author, b.isbn 
                  FROM borrow_history bh 
                  JOIN books b ON bh.book_id = b.book_id 
-                 WHERE bh.user_id = ? 
+                 WHERE bh.student_id = ? 
                  ORDER BY bh.borrow_date DESC";
 $borrowed_stmt = $conn->prepare($borrowed_sql);
 if ($borrowed_stmt === false) {
     $error_message = "Database error: " . $conn->error;
 } else {
-    $borrowed_stmt->bind_param("i", $_SESSION['user_id']);
+    $borrowed_stmt->bind_param("i", $_SESSION['student_id']);
     $borrowed_stmt->execute();
     $borrowed_result = $borrowed_stmt->get_result();
 }

@@ -2,18 +2,19 @@
 require_once 'config.php';
 
 $login_err = "";
+
 $register_err = "";
 
 // Process login form
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
-    $user_id = sanitize_input($_POST['user_id']);
+    $student_id = sanitize_input($_POST['student_id']);
     $password = sanitize_input($_POST['password']);
     
-    if ($user_id == 'admin') {
+    if ($student_id == 'admin') {
         // Librarian login
-        $sql = "SELECT * FROM librarian WHERE username = ? AND password = ?";
+        $sql = "SELECT * FROM librarian WHERE admin_id = ? AND password = ?";
         if ($stmt = $conn->prepare($sql)) {
-            $stmt->bind_param("ss", $user_id, $password);
+            $stmt->bind_param("ss", $student_id, $password);
             $stmt->execute();
             $result = $stmt->get_result();
             
@@ -27,34 +28,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
         }
     } else {
         // Student login
-        $sql = "SELECT * FROM users WHERE user_id = ? AND password = ?";
+        $sql = "SELECT * FROM students WHERE student_id = ? AND password = ?";
         if ($stmt = $conn->prepare($sql)) {
-            $stmt->bind_param("ss", $user_id, $password);
+            $stmt->bind_param("ss", $student_id, $password);
             $stmt->execute();
             $result = $stmt->get_result();
             
             if ($result->num_rows == 1) {
                 $row = $result->fetch_assoc();
-                $_SESSION['user_id'] = $row['user_id'];
+                $_SESSION['student_id'] = $row['student_id'];
                 $_SESSION['name'] = $row['name'];
                 header("location: student_dashboard.php");
                 exit;
             }
         }
     }
-    $login_err = "Invalid username or password.";
+    $login_err = "Invalid user_id or password.";
 }
 
 // Process registration form
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register'])) {
-    $user_id = sanitize_input($_POST['reg_user_id']);
+    $student_id = sanitize_input($_POST['reg_student_id']);
     $name = sanitize_input($_POST['reg_name']);
     $password = sanitize_input($_POST['reg_password']);
     
     // Check if user exists
-    $sql = "SELECT user_id FROM users WHERE user_id = ?";
+    $sql = "SELECT student_id FROM students WHERE student_id = ?";
     if ($stmt = $conn->prepare($sql)) {
-        $stmt->bind_param("s", $user_id);
+        $stmt->bind_param("s", $student_id);
         $stmt->execute();
         $result = $stmt->get_result();
         
@@ -62,9 +63,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register'])) {
             $register_err = "This ID is already registered.";
         } else {
             // Insert new user
-            $sql = "INSERT INTO users (user_id, name, password) VALUES (?, ?, ?)";
+            $sql = "INSERT INTO students (student_id, name, password) VALUES (?, ?, ?)";
             if ($stmt = $conn->prepare($sql)) {
-                $stmt->bind_param("sss", $user_id, $name, $password);
+                $stmt->bind_param("sss", $student_id, $name, $password);
                 
                 if ($stmt->execute()) {
                     header("location: index.php?registration=success");
@@ -127,7 +128,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register'])) {
                     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
                         <div class="mb-3">
                             <label class="form-label">User ID</label>
-                            <input type="text" name="user_id" class="form-control" required>
+                            <input type="text" name="student_id" class="form-control" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Password</label>
@@ -147,7 +148,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register'])) {
                     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
                         <div class="mb-3">
                             <label class="form-label">Student ID</label>
-                            <input type="text" name="reg_user_id" class="form-control" required>
+                            <input type="text" name="reg_student_id" class="form-control" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Full Name</label>

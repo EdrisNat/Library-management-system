@@ -105,7 +105,7 @@ if ($borrowed_books_result) {
 }
 
 // Get total students
-$total_students_query = "SELECT COUNT(*) as count FROM users";
+$total_students_query = "SELECT COUNT(*) as count FROM students";
 $total_students_result = $conn->query($total_students_query);
 if ($total_students_result) {
     $total_students = $total_students_result->fetch_assoc()['count'];
@@ -124,7 +124,7 @@ $history_sql = "SELECT bh.*, b.title, u.name as user_name,
                        bh.borrow_date, bh.return_date
                 FROM borrow_history bh 
                 JOIN books b ON bh.book_id = b.book_id 
-                JOIN users u ON bh.user_id = u.user_id 
+                JOIN students u ON bh.student_id = u.student_id 
                 ORDER BY bh.borrow_date DESC";
 $history_result = $conn->query($history_sql);
 if (!$history_result) {

@@ -20,7 +20,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
 // Function to check if user is logged in
 function isLoggedIn() {
-    return isset($_SESSION['user_id']) || isset($_SESSION['librarian']);
+    return isset($_SESSION['student_id']) || isset($_SESSION['librarian']);
 }
 
 // Function to check if user is librarian
